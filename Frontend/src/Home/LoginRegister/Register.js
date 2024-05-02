@@ -104,8 +104,15 @@ function Register2() {
             }
         })
             .then(function (response) {
-                openHint()
-                handletext3("註冊成功 請檢查信件並完成郵箱驗證");
+                // console.log(response.data)
+                if (response.data.USERRV !== response.data.extracted_part) {
+                    openHint()
+                    handletext3("驗證碼輸入錯誤");
+                }
+                else {
+                    openHint()
+                    handletext3("註冊成功 請檢查信件並完成郵箱驗證");
+                }
             })
             .catch(function (error) {
                 openHint()
