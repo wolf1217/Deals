@@ -8,8 +8,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use PHPOpenSourceSaver\JWTAuth\JWTAuth;
-
 
 
 class AuthController extends Controller
@@ -23,8 +21,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     { 
-        
-        // return $request;
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
@@ -43,11 +39,10 @@ class AuthController extends Controller
         $verification = $request->rv;
         
         
-        
         // 取得id存進token payload方便後續使用
         $id = DB::table("users")->select("id")->where("email", "=", $request->email)->get();
         $id = $id[0]->id;
-        // $id = $user->id;
+
         
         // 如果輸入的帳密正確，$token會su3得到一個token，否則會得到 false值
         $credentials = $request->only('email', 'password');
@@ -58,12 +53,14 @@ class AuthController extends Controller
        
         // 得到用戶資訊
         $user = Auth::user();
-        // return $extracted_part;
+
         
+        // 資料庫信箱驗證資料
         $hasVerified = User::select("email_verified_at")->where('email', "=", $request->email)->first()->email_verified_at;
+
+
         // 驗證碼判斷成功而且token有值，才能成功登入
-        // if ($extracted_part === $verification && $token && $hasVerified !== null) {
-        if ($extracted_part === $verification && $token ) {
+        if ($extracted_part === $verification && $token && $hasVerified !== null) {
             return response()->json([
                 // "email_verified_at" => $hasVerified,
                 "message" => "驗證登入成功",

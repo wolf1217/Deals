@@ -7,30 +7,37 @@ use Illuminate\Support\Facades\DB;
 
 class LikeController extends Controller
 {
+    // 使用者對哪篇文章按過讚或倒讚
     public function like(Request $request)
     {
-        // 使用者對哪篇文章按過讚或倒讚
+        // 解碼token 拿取裡面的id
         $token = $request->token;
         $decoded_token = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
         $id = $decoded_token->id;
+
 
         $likes = DB::table('LikeAndDislike')
             ->where('UID', $id)
             ->select('WID', 'GiveLike', 'GiveDislike')
             ->get();
 
+
         return response()->json($likes);
     }
 
+
     public function toggleLikeDislike(Request $request)
     {
+        // 解碼token 拿取裡面的id
         $token = $request->token;
         $decoded_token = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
         $uid = $decoded_token->id;
+
+
         $wid = $request->input('wid');
         $action = $request->input('action'); // 可能的值：'like' 或 'dislike'
 
-        // 輸入like
+        
         if ($action === 'like') {
             $existingRecord = DB::table('LikeAndDislike')->where('GiveLike', 1)->where('WID', $wid)->where('UID', $uid);
             $existingRecord3 = DB::table('LikeAndDislike')->where('GiveLike', 0)->where('WID', $wid)->where('UID', $uid);

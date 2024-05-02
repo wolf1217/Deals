@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext, useEffect } from 'react'
+import React, { useRef, useState, useContext, useEffect} from 'react'
 import { Grid, Paper, Typography, createTheme, ThemeProvider, Divider, Stack, IconButton, Box, Button, Tabs, Tab, Slide } from '@mui/material'
 // 資料引用
 import New2 from './New2'
@@ -14,7 +14,6 @@ import { FaLine } from "react-icons/fa";
 import { CiTwitter } from "react-icons/ci";
 import axios from 'axios';
 import { Carousel } from 'bootstrap';
-
 
 
 
@@ -78,6 +77,11 @@ function Page1() {
       .catch(error => console.error('Error fetching images:', error));
   }, []); // 空依赖数组保证这个effect只在组件首次渲染时执行
 
+  const { category, setCategory } = useContext(CategoryContext);
+  const handleCategoryClick = (categoryName) => {
+      setCategory(categoryName);
+  };
+  console.log(category)
 
   return (
     <>
@@ -100,6 +104,22 @@ function Page1() {
                 width: auto; 
                 object-fit: cover; 
               }
+              .carousel-item {
+                position: relative;
+              }
+              .click-icon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 32px;
+                color: white;
+                display: none; 
+                z-index: 10;
+              }
+              .carousel-item:hover .click-icon {
+                display: block;
+              }
             `}
             
           </style>
@@ -107,10 +127,19 @@ function Page1() {
               <div className="carousel-inner">
                   {images.map((image, index) => (
                       <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                          <img src={`data:image/jpeg;base64,${image.image_url}`} className="img-fixed-height d-block w-100" alt="Carousel item" />
-                          {/* <div className="carousel-caption d-none d-md-block">
-                              <p>{image.description}</p>
-                          </div> */}
+                          <img 
+                            onClick={() => handleCategoryClick(image.keyword)} 
+                            src={`data:image/jpeg;base64,${image.image_url}`} 
+                            className="img-fixed-height d-block w-100" 
+                            alt="Carousel item" 
+                          />
+                          <span className="click-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <line x1="12" y1="8" x2="12" y2="16"></line>
+                              <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                          </span>
                       </div>
                   ))}
               </div>
@@ -132,10 +161,6 @@ function Page1() {
                 <span className="visually-hidden">Next</span>
               </button>
             </div>
-            {/* <Typography  variant='h6' color='#000000'>熱門趨勢
-              <Divider />
-            </Typography> */}
-            {/* <Treemap /> */}
           </Grid>
         </Grid>
 

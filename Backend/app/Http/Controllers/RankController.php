@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Fukuball\Jieba\Finalseg;
 use Illuminate\Http\Request;
-use App\Models\Rank;
 use Fukuball\Jieba\Jieba;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +29,7 @@ class RankController extends Controller
                 'UserPost.*',
                 'users.name',
                 'users.image',
-
+                // 如果是空值設為0
                 DB::raw('IFNULL(SUM(LikeAndDislike.GiveLike), "0") as total_likes'),
                 DB::raw('IFNULL(SUM(LikeAndDislike.GiveDislike), "0") as total_dislikes')
             )
@@ -52,7 +51,6 @@ class RankController extends Controller
                 'UserPost.product_tag',
                 'users.name',
                 'users.image',
-
             );
 
 

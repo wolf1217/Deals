@@ -10,7 +10,7 @@ class ImageController extends Controller
     public function index(Request $request)
     {
         $images = DB::table("carousel")
-                    ->select('image as image_url')
+                    ->select('image as image_url', 'keyword')
                     ->get();
         
         return response()->json([

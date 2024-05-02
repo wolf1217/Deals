@@ -17,7 +17,6 @@ class UpdateController extends Controller
     {
         $request->validate([
             'id' => 'required|integer',
-
         ]);
 
         $delete_item = User::select('name')->where('id', '=', $request->id)->get();
